@@ -48,8 +48,10 @@ const show = {
 //Функция для ведения огня
 const fire = (event) => {
     let target = event.target;
-    show.miss(target);
-    play.updateData = "shot";
+    if(target.className === ""){
+        show.miss(target);
+        play.updateData = "shot";  
+    }; 
 };
 
 //Инициализация игры
