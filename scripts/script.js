@@ -11,7 +11,7 @@ const record = document.getElementById('record'),
 //Обект для обновления информации о состоянии игры
 
 const play = {
-    record: 0,
+    record: localStorage.getItem('SeaBattleRacord') || 0,
     shot: 0,
     hit: 0,
     dead: 0,
@@ -98,6 +98,13 @@ const fire = (event) => {
                    game.shipsCount -= 1;
                    if(game.shipsCount < 1){
                        header.textContent = 'GAME OVER';
+                       header.style.color = "red";
+
+                       if(play.shot > play.record || play.record === 0){
+                           localStorage.setItem('SeaBattleRacord', play.shot);
+                           play.record = play.shot;
+                           play.render();
+                       }
                    }
                }
             }
@@ -110,6 +117,7 @@ const fire = (event) => {
 //Инициализация игры
 const init = () => {
     enemy.addEventListener('click', fire);
+    play.render();
 };
 
 init();
