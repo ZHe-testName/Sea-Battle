@@ -73,7 +73,7 @@ const show = {
 //Функция для ведения огня
 const fire = (event) => {
     let target = event.target;
-    if(target.className === "" && target.tagName === 'TD'){
+    if(target.className === "" && target.tagName === 'TD' && game.shipsCount > 0){
         show.miss(target);
         play.updateData = "shot";  
         //цикл для проверки на попадание в корабль
@@ -96,10 +96,11 @@ const fire = (event) => {
                    }
 
                    game.shipsCount -= 1;
+                   //условие окончания игры
                    if(game.shipsCount < 1){
                        header.textContent = 'GAME OVER';
                        header.style.color = "red";
-
+                       //Запись рекорда в localStorage,рендеринг
                        if(play.shot < play.record || play.record === 0){
                            localStorage.setItem('SeaBattleRacord', play.shot);
                            play.record = play.shot;
