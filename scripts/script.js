@@ -100,7 +100,7 @@ const fire = (event) => {
                        header.textContent = 'GAME OVER';
                        header.style.color = "red";
 
-                       if(play.shot > play.record || play.record === 0){
+                       if(play.shot < play.record || play.record === 0){
                            localStorage.setItem('SeaBattleRacord', play.shot);
                            play.record = play.shot;
                            play.render();
@@ -118,6 +118,10 @@ const fire = (event) => {
 const init = () => {
     enemy.addEventListener('click', fire);
     play.render();
+
+    again.addEventListener('click', () => {
+       location.reload();
+    });
 };
 
 init();
