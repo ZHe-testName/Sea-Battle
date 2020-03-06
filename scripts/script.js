@@ -27,28 +27,60 @@ const play = {
     }
 };
 
-//Обект скораблями и методами слежки попаданий
+//Обект с методами розстановки кораблей и методами слежки попаданий
 
 const game = {
-   ships: [
-      {
-          location: ['00', '01', '02', '03'],
-          hit: ['', '', '', '']
-      },
-      {
-          location: ['70', '80', '90'],
-          hit: ['', '', '']
-      },
-      {
-          location: ['09', '19'],
-          hit: ['', '']
-      },
-      {
-          location: ['99'],
-          hit: ['']
+   ships: [],
+   shipsCount: 0,
+   optionShip: {
+       count: [1, 0, 0, 0],
+       size: [4, 3, 2, 1]
+   },
+
+   generateOptionsShip(shipSize){
+      const ship = {
+          hit: [],
+          location: []
       }
-   ],
-   shipsCount: 4
+      const direction = Math.random() > 0.5;
+      let x, y;
+      
+      if(direction){
+        console.log('горизонтальный');
+        x = Math.floor(Math.random() * 10);
+        console.log('x : ' + x);
+        y = Math.floor(Math.random() * (10 - shipSize));
+        console.log('y : ' + y);
+      }else{
+        console.log('вертикальный');
+        x = Math.floor(Math.random() * (10 - shipSize));
+        console.log('x : ' + x);
+        y = Math.floor(Math.random() * 10);
+        console.log('y : ' + y);
+      }
+
+      for(let i = 0; i < shipSize; i++){
+          if(direction){
+            ship.location.push(x + '' + (y + i));
+          }else{
+            ship.location.push((x + i) + '' + y);
+          }
+      }
+
+
+      return ship;
+   },
+
+   generateShip(){
+      for(let i = 0; i < this.optionShip.count.length; i++){
+          for(let j = 0; j < this.optionShip.count[i]; j++){
+              const size = this.optionShip.size[i];
+              const ship = this.generateOptionsShip(size);
+              this.ships.push(ship);
+              this.shipsCount++;
+          }
+      }
+   }
 }
 
 //Обект с функциями для отображения сосояния клеток
@@ -120,16 +152,18 @@ const fire = (event) => {
 const init = () => {
     enemy.addEventListener('click', fire);
     play.render();
+    game.generateShip();
 
     again.addEventListener('click', () => {
        location.reload();
     });
 
-    record.addEventListener('click', () => {
+    record.addEventListener('dblclick', () => {
         localStorage.clear();
-        play.record = play.shot;
+        play.record = 0;
         play.render();
     })
+    console.log(game.ships);
 };
 
 init();
