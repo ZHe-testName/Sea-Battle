@@ -55,6 +55,19 @@ ul {
     background-image: url('../img/skull.svg'); 
 }
 
+#record {
+  cursor: pointer;
+  border-radius: 20%;
+}
+
+#record:hover {
+  background-color: tomato;
+}
+
+#enemy {
+  cursor: pointer;
+}
+
 a {
     position: relative;
     width: 300px;

@@ -73,6 +73,7 @@ const show = {
 //Функция для ведения огня
 const fire = (event) => {
     let target = event.target;
+    //если у ячейки нет класса И ее имя тега - "td" И есть хоть один живой корабль...
     if(target.className === "" && target.tagName === 'TD' && game.shipsCount > 0){
         show.miss(target);
         play.updateData = "shot";  
@@ -97,7 +98,7 @@ const fire = (event) => {
 
                    game.shipsCount -= 1;
                    //условие окончания игры
-                   if(game.shipsCount < 1){
+                   if(!game.shipsCount){
                        header.textContent = 'GAME OVER';
                        header.style.color = "red";
                        //Запись рекорда в localStorage,рендеринг
@@ -123,6 +124,12 @@ const init = () => {
     again.addEventListener('click', () => {
        location.reload();
     });
+
+    record.addEventListener('click', () => {
+        localStorage.clear();
+        play.record = play.shot;
+        play.render();
+    })
 };
 
 init();
