@@ -33,10 +33,11 @@ const game = {
    ships: [],
    shipsCount: 0,
    optionShip: {
-       count: [1, 0, 0, 0],
+       count: [1, 2, 3, 4],
        size: [4, 3, 2, 1]
    },
-
+   colizion: new Set(),
+   //функция позиционирования и определения кораблей
    generateOptionsShip(shipSize){
       const ship = {
           hit: [],
@@ -44,31 +45,59 @@ const game = {
       }
       const direction = Math.random() > 0.5;
       let x, y;
-      
+      //реадизация направления корабля
       if(direction){
-        console.log('горизонтальный');
         x = Math.floor(Math.random() * 10);
-        console.log('x : ' + x);
         y = Math.floor(Math.random() * (10 - shipSize));
-        console.log('y : ' + y);
       }else{
-        console.log('вертикальный');
         x = Math.floor(Math.random() * (10 - shipSize));
-        console.log('x : ' + x);
         y = Math.floor(Math.random() * 10);
-        console.log('y : ' + y);
       }
-
+      //дорисовка корабля
       for(let i = 0; i < shipSize; i++){
           if(direction){
             ship.location.push(x + '' + (y + i));
           }else{
             ship.location.push((x + i) + '' + y);
           }
+          ship.hit.push('');
+      }
+      //хвостовая рекурсия
+      //тут использую для перерисовки корабля в случае
+      //если он попал в колизию(клетки вокруг корабля где 
+      //не должно быть других кораблей)
+      if(this.checkColizion(ship.location)){
+          return this.generateOptionsShip(shipSize);
       }
 
+      this.addColizion(ship.location);
 
       return ship;
+   },
+   //функция-индикатор попадения корабля в колизию
+   checkColizion(location){
+      for(cords of location){
+         if(this.colizion.has(cords)){
+             return true;
+         }
+      }
+   },
+   //функция определения множества Set координат колизий кораблей
+   addColizion(location){
+      for(let i = 0; i < location.length; i++){
+          const startCordX = location[i][0] - 1;
+          
+          for(let j = startCordX; j < startCordX + 3; j++){
+              const startCordY = location[i][1] - 1;
+              
+              for(let z = startCordY; z < startCordY + 3; z++){
+                  if(j >= 0 && j < 10 && z >= 0 && z < 10){
+                      const cord = j + '' + z;
+                      this.colizion.add(cord);
+                  }
+              }
+          }
+      }
    },
 
    generateShip(){
@@ -163,7 +192,7 @@ const init = () => {
         play.record = 0;
         play.render();
     })
-    console.log(game.ships);
+    console.log(game);
 };
 
 init();
